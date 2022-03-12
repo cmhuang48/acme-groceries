@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { connect, Provider } from 'react-redux';
-import axios from 'axios';
 import Nav from './Nav';
 import store from './store';
 import Groceries from './Groceries';
 import CreateForm from './CreateForm';
-
-
+import { load, setView } from './store';
 
 class _App extends Component{
   componentDidMount(){
@@ -34,17 +32,12 @@ const App = connect(
   state => state,
   (dispatch)=> {
     return {
-      setView: (view)=> dispatch({ type: 'SET_VIEW', view }), 
-      bootstrap: async()=> {
-        const groceries = (await axios.get('/api/groceries')).data;
-        dispatch({
-          type: 'LOAD',
-          groceries
-        })
+      setView: (view)=> dispatch(setView(view)), 
+      bootstrap: ()=> {
+          dispatch(load());
       } 
     }
   }
 )(_App);
-
 
 render(<Provider store={ store }><App /></Provider>, document.querySelector('#root'));
